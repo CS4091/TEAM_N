@@ -5,7 +5,7 @@ The **Air-to-Ground Search Project** will implement and compare several path pla
 
 ## Team N
 - **Jack Madison**
-- **Debora Madison**
+- **Debora Andrade**
 - **Makalyn Kline**
 - **Jordan Lewis**
 - **Garrett Wacker**
