@@ -18,6 +18,15 @@ The **Air-to-Ground Search Project** will implement and compare several path pla
 ## Installation
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/en/)
+- [Node.js v22.14.0](https://nodejs.org/en/)
 - [Python3](https://www.python.org/)
+### Use node and Python to install the dependencies
+```bash
+cd "$(git rev-parse --show-toplevel)"; cd client; npm install; cd "$(git rev-parse --show-toplevel)"; cd backend; pip install Flask;
+```
+
+## Starting the App
+```bash
+cd "$(git rev-parse --show-toplevel)"; python backend/src/main.py; cd "$(git rev-parse --show-toplevel)"; cd client; npm start
+```
 
