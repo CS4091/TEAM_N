@@ -26,7 +26,8 @@ cd "$(git rev-parse --show-toplevel)"; cd client; npm install; cd "$(git rev-par
 ```
 
 ## Starting the App
+Once you have installed the dependencies above, run the application:
 ```bash
-cd "$(git rev-parse --show-toplevel)"; python backend/src/main.py; cd "$(git rev-parse --show-toplevel)"; cd client; npm start
+cd "$(git rev-parse --show-toplevel)"; start http://127.0.0.1:5000; python backend/src/main.py;
 ```
 
