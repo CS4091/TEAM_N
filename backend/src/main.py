@@ -1,6 +1,6 @@
 import os
 from flask import Flask, jsonify, send_from_directory
-from backend.src.grid_generation.grid_world_search_generator import generate_map
+from grid_generation.grid_world_search_generator import generate_map
 
 # Global variables to store the generated map data
 grid = None
