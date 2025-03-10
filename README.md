@@ -22,11 +22,12 @@ The **Air-to-Ground Search Project** will implement and compare several path pla
 - [Python3](https://www.python.org/)
 ### Use node and Python to install the dependencies
 ```bash
-cd "$(git rev-parse --show-toplevel)"; cd client; npm install; cd "$(git rev-parse --show-toplevel)"; cd backend; pip install Flask;
+cd "$(git rev-parse --show-toplevel)"; cd client; npm install; cd "$(git rev-parse --show-toplevel)"; cd backend; pip install Flask; pip install pathlib; pip install matplotlib; pip install noise;
 ```
 
 ## Starting the App
+Once you have installed the dependencies above, run the application:
 ```bash
-cd "$(git rev-parse --show-toplevel)"; python backend/src/main.py; cd "$(git rev-parse --show-toplevel)"; cd client; npm start
+cd "$(git rev-parse --show-toplevel)"; start http://127.0.0.1:5000; python backend/src/main.py;
 ```
 
