@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Controls from "./Controls";
+import GridTraversal from "./GridWork";
+import "./App.css";
+import GridWork from "./GridWork";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const [algorithm, setAlgorithm] = useState("DFS");
+    const [mode, setMode] = useState("Manual");
+    const [running, setRunning] = useState(false);
+
+    return (
+        <div className="app-container">
+            <h1>Testing Controls</h1>
+            <div className="grid-container">
+                <GridWork />
+            </div>
+            <Controls
+                algorithm={algorithm}
+                setAlgorithm={setAlgorithm}
+                mode={mode}
+                setMode={setMode}
+                setRunning={setRunning}
+            />
+        </div>
+    );
+};
 
 export default App;
