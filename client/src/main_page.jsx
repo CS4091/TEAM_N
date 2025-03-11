@@ -58,15 +58,15 @@ function ProjectLandingPage() {
               </div>
               <ul className="feature-list">
                 <li>
-                  <h3>Key Feature One</h3>
+                  <h3>Optimized Pathfinding with Coverage Constraints</h3>
                   <p>The aircraft navigates the grid using only forward movements and left/right turns, avoiding obstacles while ensuring at least 80% of the terrain is scanned. The algorithm minimizes movement costs and detects dead-end areas (box canyons) to prevent the aircraft from getting stuck.</p>
                 </li>
                 <li>
-                  <h3>Key Feature Two</h3>
+                  <h3>Efficient Sensor-Based Scanning</h3>
                   <p>Equipped with a 2x3 scanning sensor, the aircraft strategically positions itself to maximize coverage while reducing redundant passes. The algorithm ensures efficient data collection by optimizing flight paths to scan as many grid cells as possible.</p>
                 </li>
                 <li>
-                  <h3>Key Feature Three</h3>
+                  <h3>Algorithmic Flexibility and Extendability</h3>
                   <p>The project supports different pathfinding heuristics, allowing comparison of algorithms like A* and Greedy search. It can be extended with constraints such as limited movement or multiple aircraft working together. A visualization system can also be added to display paths and scanning efficiency.</p>
                 </li>
               </ul>
@@ -81,7 +81,7 @@ function ProjectLandingPage() {
               <TeamMemberCard
                 name="Debora &quot;Deb&quot; Andrade"
                 role="Frontend Developer"
-                bio="Passionate about UI/UX"
+                bio="Passionate about UI/UX and Frontend developing."
               />
               <TeamMemberCard
                 name="Garret Wacker"
@@ -91,7 +91,7 @@ function ProjectLandingPage() {
               <TeamMemberCard
                 name="Jack Madison"
                 role="Backend Developer"
-                bio="API expertise, passionate about System Architecture and Design."
+                bio="API experience, passionate about System Architecture and Design."
               />
               <TeamMemberCard
                 name="Jakob Ferguson"
