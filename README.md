@@ -22,7 +22,7 @@ The **Air-to-Ground Search Project** will implement and compare several path pla
 - [Python3](https://www.python.org/)
 ### Use node and Python to install the dependencies
 ```bash
-cd "$(git rev-parse --show-toplevel)"; cd client; npm install; cd "$(git rev-parse --show-toplevel)"; cd backend; pip install Flask; pip install flask_cors;
+cd "$(git rev-parse --show-toplevel)"; cd client; cd ../backend; pip install Flask; pip install flask_cors;
 ```
 
 ## Starting the App

@@ -8,6 +8,18 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".
 from .. import main
 
 
+# direction mappings
+direction_map = {
+    "N": (-1, 0),
+    "S": (1, 0),
+    "E": (0, 1),
+    "W": (0, -1),
+}
+
+# Left and right turn mappings
+left_turn = {"N": "W", "W": "S", "S": "E", "E": "N"}
+right_turn = {"N": "E", "E": "S", "S": "W", "W": "N"}
+
 def bfs(queue, visited, grid, scanned, total_cells, steps_cache):
     """
     Iterative BFS to explore the grid while maximizing scan coverage.
@@ -92,37 +104,26 @@ def is_valid_cell(x, y, grid, visited):
 
 
 ''' Main Start '''
+def run_breadth_algorithm():
+    # Load grid and starting positions
+    grid = main.grid
+    start_x, start_y = main.start_position
+    start_direction = "N"
 
-# direction mappings
-direction_map = {
-    "N": (-1, 0),
-    "S": (1, 0),
-    "E": (0, 1),
-    "W": (0, -1),
-}
+    # initialize bfs
+    queue = deque([(start_x, start_y, start_direction, [(start_x, start_y)])])
+    visited = set()
+    scanned = set()
+    steps_cache = []
+    total_cells = np.sum(grid == 0)
 
-# Left and right turn mappings
-left_turn = {"N": "W", "W": "S", "S": "E", "E": "N"}
-right_turn = {"N": "E", "E": "S", "S": "W", "W": "N"}
+    # run bfs until all reachable cells are visited
+    path_taken, time_taken = bfs(queue, visited, grid, scanned, total_cells, steps_cache)
 
-# Load grid and starting positions
-grid = main.grid
-start_x, start_y = main.start_position
-start_direction = "N"
+    ''' Calculate Metrics '''
+    main.number_of_moves = len(steps_cache)
 
-# initialize bfs
-queue = deque([(start_x, start_y, start_direction, [(start_x, start_y)])])
-visited = set()
-scanned = set()
-steps_cache = []
-total_cells = np.sum(grid == 0)
-
-# run bfs until all reachable cells are visited
-path_taken, time_taken = bfs(queue, visited, grid, scanned, total_cells, steps_cache)
-
-''' Calculate Metrics '''
-main.number_of_moves = len(steps_cache)
-
-# get percentage of grid covered
-scanned_cells = len(scanned)
-coverage = (scanned_cells / total_cells) * 100.0
+    # get percentage of grid covered
+    scanned_cells = len(scanned)
+    coverage = (scanned_cells / total_cells) * 100.0
+    return steps_cache, time_taken, coverage
