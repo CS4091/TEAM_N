@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Controls from "./Controls";
 import GridTraversal from "./GridWork";

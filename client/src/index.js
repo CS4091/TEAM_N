@@ -11,10 +11,7 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        {/* Landing page (default route) */}
         <Route path="/" element={<ProjectLandingPage />} />
-
-        {/* App page */}
         <Route path="/app" element={<App />} />
       </Routes>
     </Router>
