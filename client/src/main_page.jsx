@@ -27,8 +27,7 @@ function ProjectLandingPage() {
         <section className="hero">
           <div className="container">
             <div className="hero-content">
-              <span className="badge">Project Showcase</span>
-              <h1>Boeing Project 3</h1>
+              <h1>Team N - Boeing Project 3</h1>
               <p>Air-to-Ground Search</p>
               <div className="button-group">
                 <a href="#about" className="button primary">
