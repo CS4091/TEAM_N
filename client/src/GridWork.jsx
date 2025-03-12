@@ -38,10 +38,10 @@ const GridWork = () => {
                     console.error("Invalid grid data from API:", data);
                 }
 
-                setLoading(false); // Ensure loading is set to false after API call
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching grid:", error);
-                setLoading(false); // Avoid infinite loading state
+                setLoading(false);
             }
         };
 
@@ -49,12 +49,11 @@ const GridWork = () => {
     }, []);
 
     return (
-        <div>
-            <h2>Grid Display</h2>
+        <div >
             {loading ? (
                 <p>Loading grid...</p>
-            ) : grid.length > 0 ? ( // Ensure grid is not empty
-                <table border="1" cellPadding="1" align={"center"}>
+            ) : grid.length > 0 ? (
+                <table border="1" cellPadding="1" style={{marginBottom: "10px"}}>
                     <tbody>
                         {grid.map((row, rowIndex) => (
                             <tr key={rowIndex}>
@@ -62,11 +61,10 @@ const GridWork = () => {
                                     <td
                                         key={`${rowIndex}-${colIndex}`}
                                         style={{
-                                            width: "1px", // Increased for visibility
+                                            width: "1px",
                                             height: "1px",
-                                            textAlign: "center",
                                             backgroundColor: cell === 1 ? "black" : "white",
-                                            border: "1px solid gray" // Border for better visibility
+                                            border: "1px solid gray"
                                         }}
                                     >
                                         {planePosition &&
@@ -83,7 +81,7 @@ const GridWork = () => {
                     </tbody>
                 </table>
             ) : (
-                <p>No grid data available.</p> // Show message if grid is empty
+                <p>No grid data available.</p>
             )}
         </div>
     );
