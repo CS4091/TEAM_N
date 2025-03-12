@@ -1,6 +1,8 @@
 import os
 from flask import Flask, jsonify, send_from_directory
 from grid_generation.grid_world_search_generator import generate_map
+from algorithms.breadth_first_search import run_breadth_algorithm
+from flask_cors import CORS
 
 # Global variables to store the generated map data
 grid = None
@@ -18,6 +20,7 @@ initialize_map()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 index_path = os.path.join(BASE_DIR, '../../client/build')
 app = Flask(__name__, static_folder=index_path)
+CORS(app)
 
 @app.route('/api/hello', methods=['GET'])
 def hello():
@@ -32,6 +35,10 @@ def get_map():
         "number_of_moves": number_of_moves
     }
     return jsonify(response_data)
+
+@app.route('/api/breadth', methods=['GET'])
+def breadth():
+    return jsonify(run_breadth_algorithm(grid, start_position, number_of_moves))
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

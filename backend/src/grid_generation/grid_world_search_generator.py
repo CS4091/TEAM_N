@@ -90,13 +90,13 @@ def write_problem_params(output_filepath: pathlib.Path, grid: np.ndarray):
         output.write('3,7\n')
 
 def generate_map():
-    width = 100  # Width of the grid
-    height = 100  # Height of the grid
+    width = 30  # Width of the grid
+    height = 30  # Height of the grid
 
     #random.seed(42)
 
     scale = 50.0
-    threshold = 0.4  # Threshold for determining if noise value becomes an obstacle
+    threshold = 0.6  # Threshold for determining if noise value becomes an obstacle
     octaves = 2
     persistence = random.uniform(0.25, 4.5)
     lacunarity = random.uniform(1, 5)
