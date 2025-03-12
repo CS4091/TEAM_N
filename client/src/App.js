@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Controls from "./Controls";
 import GridTraversal from "./GridWork";
@@ -25,5 +26,6 @@ const App = () => {
         </div>
     );
 };
+
 
 export default App;
