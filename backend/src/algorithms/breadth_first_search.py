@@ -5,8 +5,6 @@ import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-from .. import main
-
 
 # direction mappings
 direction_map = {
@@ -104,10 +102,10 @@ def is_valid_cell(x, y, grid, visited):
 
 
 ''' Main Start '''
-def run_breadth_algorithm():
+def run_breadth_algorithm(grid, start_position, number_of_moves):
     # Load grid and starting positions
-    grid = main.grid
-    start_x, start_y = main.start_position
+    grid = grid
+    start_x, start_y = start_position
     start_direction = "N"
 
     # initialize bfs
@@ -121,7 +119,7 @@ def run_breadth_algorithm():
     path_taken, time_taken = bfs(queue, visited, grid, scanned, total_cells, steps_cache)
 
     ''' Calculate Metrics '''
-    main.number_of_moves = len(steps_cache)
+    number_of_moves = len(steps_cache)
 
     # get percentage of grid covered
     scanned_cells = len(scanned)

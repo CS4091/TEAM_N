@@ -38,7 +38,7 @@ def get_map():
 
 @app.route('/api/breadth', methods=['GET'])
 def breadth():
-    return jsonify(run_breadth_algorithm())
+    return jsonify(run_breadth_algorithm(grid, start_position, number_of_moves))
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
