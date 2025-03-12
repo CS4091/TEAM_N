@@ -15,8 +15,13 @@ const GridWork = () => {
 
                 console.log("API Response:", data);
 
-
                 if (data.grid && Array.isArray(data.grid)) {
+                    console.log("Grid Data:", data.grid);
+
+                    if (!data.grid.some(row => row.includes(1))) {
+                        console.error("No walls detected in API response!");
+                    }
+
                     setGrid(data.grid);
 
                     if (
@@ -33,7 +38,6 @@ const GridWork = () => {
                     } else {
                         console.error("Invalid start position received:", data.start_position);
                     }
-
                 } else {
                     console.error("Invalid grid data from API:", data);
                 }
@@ -48,12 +52,16 @@ const GridWork = () => {
         fetchGrid();
     }, []);
 
+    useEffect(() => {
+        console.log("Updated grid:", grid);
+    }, [grid]);
+
     return (
-        <div >
+        <div>
             {loading ? (
                 <p>Loading grid...</p>
             ) : grid.length > 0 ? (
-                <table border="1" cellPadding="1" style={{marginBottom: "10px"}}>
+                <table cellPadding="0" style={{ marginBottom: "10px", borderCollapse: "collapse" }}>
                     <tbody>
                         {grid.map((row, rowIndex) => (
                             <tr key={rowIndex}>
@@ -61,19 +69,17 @@ const GridWork = () => {
                                     <td
                                         key={`${rowIndex}-${colIndex}`}
                                         style={{
-                                            width: "1px",
-                                            height: "1px",
-                                            backgroundColor: cell === 1 ? "black" : "white",
-                                            border: "1px solid gray"
+                                            width: "10px",
+                                            height: "10px",
+                                            backgroundColor: cell === 1 ? "#000000" : "#FFFFFF",
+                                            border: cell === 1 ? "1px solid black" : "1px solid gray",
                                         }}
                                     >
                                         {planePosition &&
                                         planePosition.row === rowIndex &&
                                         planePosition.col === colIndex ? (
                                             <FontAwesomeIcon icon={faPlane} size="xs" color="blue" />
-                                        ) : (
-                                            ""
-                                        )}
+                                        ) : null}
                                     </td>
                                 ))}
                             </tr>
