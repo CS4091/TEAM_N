@@ -33,7 +33,7 @@ function ProjectLandingPage() {
                 <a href="#about" className="button primary">
                   About Project
                 </a>
-                <a href="#demo" className="button secondary">
+                <a href="/app" className="button secondary">
                   Try It Out!
                 </a>
               </div>

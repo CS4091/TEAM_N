@@ -90,8 +90,8 @@ def write_problem_params(output_filepath: pathlib.Path, grid: np.ndarray):
         output.write('3,7\n')
 
 def generate_map():
-    width = 30  # Width of the grid
-    height = 30  # Height of the grid
+    width = 100  # Width of the grid
+    height = 100  # Height of the grid
 
     #random.seed(42)
 
