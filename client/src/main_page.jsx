@@ -39,7 +39,7 @@ function ProjectLandingPage() {
               </div>
             </div>
             <div className="hero-image">
-              <p>Project Preview</p>
+              <p>Placeholder</p>
             </div>
           </div>
         </section>
@@ -53,7 +53,7 @@ function ProjectLandingPage() {
             </p>
             <div className="features">
               <div className="feature-image">
-                <p>Project Details</p>
+                <p>Placeholder</p>
               </div>
               <ul className="feature-list">
                 <li>
@@ -80,7 +80,7 @@ function ProjectLandingPage() {
               <TeamMemberCard
                 name="Debora &quot;Deb&quot; Andrade"
                 role="Frontend Developer"
-                bio="Passionate about UI/UX and Frontend developing."
+                bio="Passionate about UI/UX and Frontend Developing."
               />
               <TeamMemberCard
                 name="Garret Wacker"
@@ -95,7 +95,7 @@ function ProjectLandingPage() {
               <TeamMemberCard
                 name="Jakob Ferguson"
                 role="Backend Developer"
-                bio="Passionate about Algorithm Design."
+                bio="Passionate about Problem Solving with Software Development."
               />
               <TeamMemberCard
                 name="Jordan Lewis"
@@ -105,7 +105,7 @@ function ProjectLandingPage() {
               <TeamMemberCard
                 name="Makalyn Kline"
                 role="Backend Developer"
-                bio="Passionate about Machine Learning and Data Science"
+                bio="Passionate about Machine Learning and Data Science."
               />
             </div>
           </div>
