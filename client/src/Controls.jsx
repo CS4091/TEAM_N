@@ -39,7 +39,7 @@ const Controls = ({ algorithm, setAlgorithm, mode, setMode, setRunning }) => {
                 </button>
             )}
 
-            <div className="current-selection">
+            <div >
                 <h3>Current Selection:</h3>
                 <p>Algorithm: {algorithm}</p>
                 <p>Mode: {mode}</p>

@@ -11,7 +11,7 @@ const App = () => {
 
     return (
         <div className="app-container">
-            <h1>Testing Controls</h1>
+            <h1 >Testing Controls</h1>
             <div className="grid-container">
                 <GridWork />
             </div>
