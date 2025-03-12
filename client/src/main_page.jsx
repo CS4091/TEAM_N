@@ -85,27 +85,27 @@ function ProjectLandingPage() {
               <TeamMemberCard
                 name="Garret Wacker"
                 role="Backend Developer"
-                bio="bio"
+                bio="Passionate about Embedded Systems and Firmware Design."
               />
               <TeamMemberCard
                 name="Jack Madison"
                 role="Backend Developer"
-                bio="API experience, passionate about System Architecture and Design."
+                bio="Passionate about System Architecture and Design."
               />
               <TeamMemberCard
                 name="Jakob Ferguson"
                 role="Backend Developer"
-                bio="bio"
+                bio="Passionate about Algorithm Design."
               />
               <TeamMemberCard
                 name="Jordan Lewis"
                 role="Frontend Developer"
-                bio="bio"
+                bio="Passionate about Cybersecurity."
               />
               <TeamMemberCard
                 name="Makalyn Kline"
-                role="something Developer"
-                bio="bio"
+                role="Backend Developer"
+                bio="Passionate about Machine Learning and Data Science"
               />
             </div>
           </div>
