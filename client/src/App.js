@@ -10,11 +10,14 @@ const App = () => {
     const [running, setRunning] = useState(false);
 
     return (
-        <div className="app-container">
-            <h1 >Testing Controls</h1>
+        <div align="center">
+            <h1 style={{ color: "blue", marginBottom: "5px" }}>Testing Controls</h1>
+            <h2 style={{ marginTop: "0px", marginBottom: "10px", color:"blue"}}>Grid Display</h2>
+
             <div className="grid-container">
                 <GridWork />
             </div>
+
             <Controls
                 algorithm={algorithm}
                 setAlgorithm={setAlgorithm}
@@ -25,5 +28,6 @@ const App = () => {
         </div>
     );
 };
+
 
 export default App;
