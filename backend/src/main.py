@@ -2,6 +2,7 @@ import os
 from flask import Flask, jsonify, send_from_directory
 from grid_generation.grid_world_search_generator import generate_map
 from algorithms.breadth_first_search import run_breadth_algorithm
+from algorithms.depth_first_search import run_depth_algorithm
 from flask_cors import CORS
 
 # Global variables to store the generated map data
@@ -39,6 +40,10 @@ def get_map():
 @app.route('/api/breadth', methods=['GET'])
 def breadth():
     return jsonify(run_breadth_algorithm(grid, start_position, number_of_moves))
+
+@app.route('/api/depth', methods=['GET'])
+def depth():
+    return jsonify(run_depth_algorithm(grid, start_position, number_of_moves))
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
