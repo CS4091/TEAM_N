@@ -38,17 +38,23 @@ def get_map():
 
 @app.route('/api/breadth', methods=['GET'])
 def breadth():
-    return jsonify(run_breadth_algorithm(grid, start_position, number_of_moves))
+    path, time_taken, coverage, path_len, num_moves = run_breadth_algorithm(grid, start_position, number_of_moves)
+    return jsonify({
+        "path": path,
+        "time": time_taken,
+        "coverage": coverage,
+        "path_len": path_len,
+        "number_of_moves": num_moves,
+        "status": "done"
+    })
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    # serve build folder index.html
+    # Serve files from React build directory
     if path and os.path.exists(os.path.join(app.static_folder, path)):
         return send_from_directory(app.static_folder, path)
-    # serve index.html
     return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
-    # Running locally on port 5000 in debug mode.
     app.run(debug=True)
