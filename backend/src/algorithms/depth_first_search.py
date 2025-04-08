@@ -56,6 +56,15 @@ def dfs(stack, grid):
 
 
 def get_scan_area(x, y, direction, grid):
+    """
+    Computes the 2x3 rectangular area in front of the aircraft based on its direction.
+
+    :param x: int - Current x-coordinate (row)
+    :param y: int - Current y-coordinate (column)
+    :param direction: str - Current heading ('N', 'S', 'E', 'W')
+    :param grid: np.array - Grid representing the map
+    :return: set - Set of tuples representing the scanned cells
+    """
     scanned_cells = set()
     dx, dy = direction_map[direction]
 
@@ -69,6 +78,18 @@ def get_scan_area(x, y, direction, grid):
 
 
 def get_valid_moves(x, y, direction, grid, visited):
+    """
+    Generates a list of valid next positions the aircraft can move to.
+    Aircraft can move forward, turn left, or turn right (but not backward).
+    Each movement also updates the direction accordingly.
+
+    :param x: int - Current x-coordinate
+    :param y: int - Current y-coordinate
+    :param direction: str - Current heading
+    :param grid: np.array - Grid map
+    :param visited: set - Set of already visited coordinates
+    :return: list - List of tuples representing valid (x, y, direction) moves
+    """
     valid_moves = []
     dx, dy = direction_map[direction]
 
@@ -93,11 +114,30 @@ def get_valid_moves(x, y, direction, grid, visited):
 
 
 def is_valid_cell(x, y, grid, visited):
+    """
+    Checks whether a cell is a valid location for the aircraft to move into.
+    A valid cell is within bounds, not an obstacle, and has not been visited yet.
+
+    :param x: int - Row index
+    :param y: int - Column index
+    :param grid: np.array - Grid map
+    :param visited: set - Set of already visited positions
+    :return: bool - True if the cell is valid, False otherwise
+    """
     return ((0 <= x < grid.shape[0]) and (0 <= y < grid.shape[1]) and
             (grid[x][y] == 0) and (x, y) not in visited)
 
 
 def run_depth_algorithm(grid, start_position, number_of_moves):
+    """
+    Wrapper function to initialize and execute the DFS algorithm
+    for a given grid and starting position.
+
+    :param grid: np.array - Grid representing the map
+    :param start_position: tuple - Starting coordinate (row, col)
+    :param number_of_moves: int - Maximum number of moves allowed
+    :return: tuple - (path_taken, time_taken, coverage, path_len, number_of_moves)
+    """
     start_x, start_y = start_position
     start_direction = "E"
 
