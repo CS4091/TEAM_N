@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
-const Controls = ({ algorithm, setAlgorithm, mode, setMode, setRunning }) => {
+const Controls = ({ algorithm, setAlgorithm, mode, setMode, running, setRunning }) => {
     return (
         <div style={{
             display: "flex",
@@ -11,13 +11,11 @@ const Controls = ({ algorithm, setAlgorithm, mode, setMode, setRunning }) => {
             gap: "20px",
             width: "100%"
         }}>
-
             <div style={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
             }}>
-
                 <div className="selection" style={{ marginBottom: "8px", textAlign: "center" }}>
                     <label>
                         <input
@@ -42,7 +40,6 @@ const Controls = ({ algorithm, setAlgorithm, mode, setMode, setRunning }) => {
                     </label>
                 </div>
 
-
                 <div className="mode-selection" style={{ marginBottom: "10px", textAlign: "center" }}>
                     <button
                         onClick={() => setMode("Manual")}
@@ -60,43 +57,37 @@ const Controls = ({ algorithm, setAlgorithm, mode, setMode, setRunning }) => {
                     </button>
                 </div>
 
-
                 {mode === "Automatic" && (
-                    <button
-                        className="play-button"
-                        onClick={() => setRunning(true)}
-                        style={{
-                            padding: "10px 20px",
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                            backgroundColor: "#4CAF50",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                            transition: "background-color 0.3s ease"
-                        }}
-                        onMouseOver={(e) => e.target.style.backgroundColor = "#45a049"}
-                        onMouseOut={(e) => e.target.style.backgroundColor = "#4CAF50"}
-                    >
-                        <FontAwesomeIcon icon={faPlay} style={{ marginRight: "5px" }} /> Play
-                    </button>
+                    <div style={{ display: "flex", gap: "10px" }}>
+
+                        <button
+                            className="play-button"
+                            onClick={() => setRunning(true)}
+                            disabled={running}
+                            style={{
+                                padding: "10px 20px",
+                                fontSize: "14px",
+                                fontWeight: "bold",
+                                backgroundColor: running ? "#8BC34A" : "#4CAF50",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "5px",
+                                cursor: running ? "not-allowed" : "pointer",
+                                transition: "background-color 0.3s ease"
+                            }}
+                            onMouseOver={(e) => {
+                                if (!running) e.target.style.backgroundColor = "#45a049";
+                            }}
+                            onMouseOut={(e) => {
+                                if (!running) e.target.style.backgroundColor = "#4CAF50";
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faPlay} style={{ marginRight: "5px" }} /> Play
+                        </button>
+
+
+                    </div>
                 )}
-            </div>
-
-
-            <div style={{
-                textAlign: "center",
-                minWidth: "180px",
-                padding: "8px",
-                border: "1px solid lightgray",
-                borderRadius: "8px",
-                backgroundColor: "#f9f9f9",
-                boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.1)"
-            }}>
-                <h3 style={{ marginBottom: "6px", textDecoration: "underline" }}>Current Selection</h3>
-                <p><strong>Algorithm:</strong> {algorithm}</p>
-                <p><strong>Mode:</strong> {mode}</p>
             </div>
         </div>
     );
