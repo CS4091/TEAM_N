@@ -73,7 +73,14 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
         if (mode !== "Automatic") return;
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/breadth");
+            console.log(algorithm);
+            let response = "";
+            if (algorithm === "BFS") {
+                response = await fetch("http://127.0.0.1:5000/api/breadth");
+            }
+            else if (algorithm === "DFS") {
+                response = await fetch("http://127.0.0.1:5000/api/depth");
+            }
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
             const data = await response.json();
