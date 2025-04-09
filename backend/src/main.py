@@ -40,6 +40,7 @@ def get_map():
 @app.route('/api/breadth', methods=['GET'])
 def breadth():
     path, time_taken, coverage, path_len, num_moves = run_breadth_algorithm(grid, start_position, number_of_moves)
+    print(path)
     return jsonify({
         "path": path,
         "time": time_taken,
@@ -51,7 +52,16 @@ def breadth():
 
 @app.route('/api/depth', methods=['GET'])
 def depth():
-    return jsonify(run_depth_algorithm(grid, start_position, number_of_moves))
+    path, time_taken, coverage, path_len, num_moves = run_depth_algorithm(grid, start_position, number_of_moves)
+    print(path)
+    return jsonify({
+        "path": path,
+        "time": time_taken,
+        "coverage": coverage,
+        "path_len": path_len,
+        "number_of_moves": num_moves,
+        "status": "done"
+    })
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
