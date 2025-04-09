@@ -10,6 +10,7 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
     const [moveIndex, setMoveIndex] = useState(0);
     const [showOutputButton, setShowOutputButton] = useState(false);
     const [scanArea, setScanArea] = useState([]);
+    const [algorithmResult, setAlgorithmResult] = useState(null);
 
     useEffect(() => {
         const fetchGrid = async () => {
@@ -84,6 +85,7 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
             const data = await response.json();
+            setAlgorithmResult(data);
             const path = Array.isArray(data[0]) ? data[0] : data.path;
 
             if (Array.isArray(path)) {
@@ -144,6 +146,35 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
             default: return "0deg";
         }
     };
+
+    const handleOutputClick = async () => {
+        if (!algorithmResult) {
+            alert("No algorithm output to save!");
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/save-path', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    ...algorithmResult,
+                    algorithm // include from props
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.status === "success") {
+                alert(`Output saved successfully to:\n${data.filename}`);
+            } else {
+                alert("Failed to save output.");
+            }
+        } catch (error) {
+            console.error("Error saving file:", error);
+            alert("An error occurred while saving the file.");
+        }
+    }
 
     return (
         <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
@@ -207,10 +238,15 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
                             </tbody>
                         </table>
                         {showOutputButton && (
-                            <div style={{ textAlign: "center", marginTop: "10px" }}>
-                                <button style={{ padding: "10px 20px" }}>Output File (placeholder)</button>
-                            </div>
-                        )}
+                        <div style={{ textAlign: "center", marginTop: "10px" }}>
+                            <button
+                                style={{ padding: "10px 20px" }}
+                                onClick={handleOutputClick}
+                            >
+                                Output File
+                            </button>
+                        </div>
+                    )}
                     </>
                 ) : (
                     <p>No grid data available.</p>
