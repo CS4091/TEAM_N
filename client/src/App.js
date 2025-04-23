@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Controls from "./Controls";
 import "./App.css";
 import GridWork from "./GridWork";
-import {FaGithub} from "react-icons/fa";
 
 const App = () => {
     const [algorithm, setAlgorithm] = useState("DFS");
@@ -10,29 +9,10 @@ const App = () => {
     const [running, setRunning] = useState(false);
 
     return (
-        <div align="grid">
-            <header className="header">
-        <div className="container">
-          <a href="/" className="logo">
-            Team N
-          </a>
-          <nav className="nav">
-            <a href="#about" className="nav-link">
-              About
-            </a>
-            <a href="#team" className="nav-link">
-              Team
-            </a>
-            <a href="https://github.com/CS4091/TEAM_N" className="button">
-              View on GitHub
-            </a>
-          </nav>
-        </div>
-      </header>
-            <div className="subheader">
-                <h1>Testing Controls</h1>
-                <p>Grid Display</p>
-            </div>
+        <div align="center">
+            <h1 style={{ color: "blue", marginBottom: "5px" }}>Testing Controls</h1>
+            <h2 style={{ marginTop: "0px", marginBottom: "10px", color:"blue"}}>Grid Display</h2>
+            <h1>hey man testing</h1>
             <div className="grid-container">
                 <GridWork
                     algorithm={algorithm}
@@ -49,8 +29,7 @@ const App = () => {
                 setRunning={setRunning}
             />
         </div>
-    )
-
+    );
 };
 
 

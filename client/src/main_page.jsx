@@ -38,9 +38,9 @@ function ProjectLandingPage() {
                 </a>
               </div>
             </div>
-            {/*<div className="hero-image">*/}
-            {/*  <p>Placeholder</p>*/}
-            {/*</div>*/}
+            <div className="hero-image">
+              <p>Placeholder</p>
+            </div>
           </div>
         </section>
 
