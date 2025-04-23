@@ -11,6 +11,7 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
     const [showOutputButton, setShowOutputButton] = useState(false);
     const [scanArea, setScanArea] = useState([]);
     const [algorithmResult, setAlgorithmResult] = useState(null);
+    const [visitedCells, setVisitedCells] = useState([]);
 
     useEffect(() => {
         const fetchGrid = async () => {
@@ -58,6 +59,7 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
                         direction: move.direction
                     });
                     setScanArea(getScanCells(move.row, move.col, move.direction));
+                    setVisitedCells(prev => [...prev, `${move.row}-${move.col}`]);
                 }
                 index++;
             } else {
@@ -195,8 +197,7 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
                                     <tr key={rowIndex}>
                                         {row.map((cell, colIndex) => {
                                             const isScan = scanArea.includes(`${rowIndex}-${colIndex}`);
-                                            const isLastCell =
-                                                rowIndex === grid.length - 1 && colIndex === row.length - 1;
+                                            const isVisited = visitedCells.includes(`${rowIndex}-${colIndex}`);
                                             return (
                                                 <td
                                                     key={`${rowIndex}-${colIndex}`}
@@ -208,8 +209,9 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
                                                                 ? "#000"
                                                                 : isScan
                                                                 ? "yellow"
+                                                                : isVisited
+                                                                ? "#cce5ff"
                                                                 : "#fff",
-                                                        border: isLastCell ? "1px solid #aaa" : "none"
                                                     }}
                                                 >
                                                     {planePosition &&
