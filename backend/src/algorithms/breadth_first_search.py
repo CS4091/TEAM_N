@@ -6,7 +6,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
-# Direction mappings
+# direction mappings
 direction_map = {
     "N": (-1, 0),
     "S": (1, 0),
@@ -21,13 +21,13 @@ right_turn = {"N": "E", "E": "S", "S": "W", "W": "N"}
 def bfs(queue, grid, number_of_moves):
     start_time = time.time()
 
-    visited = dict()  # Tracks best scan count for each (x, y, direction)
+    visited = dict()  # tracks best scan count for each (x, y, direction)
     best_path = []
     best_coverage = 0.0
     best_path_len = 0
 
     total_cells = np.sum(grid == 0)
-    scan_cache = {}  # Cache scan results to avoid recomputation
+    scan_cache = {}
 
     while queue:
         x, y, direction, path, scanned = queue.popleft()
@@ -47,19 +47,19 @@ def bfs(queue, grid, number_of_moves):
             continue
         visited[key] = scan_count
 
-        # Track best result
+        # track best result
         if coverage > best_coverage or (coverage == best_coverage and len(path) < best_path_len):
             best_coverage = coverage
             best_path = path
             best_path_len = len(path)
 
-        # End conditions
+        # end conditions
         if len(path) >= number_of_moves:
             continue
         if coverage >= 80.0:
             break
 
-        # Explore next moves
+        # get next moves
         next_moves = get_valid_moves(x, y, direction, grid, {p[:2] for p in path})
         scored_moves = []
 
@@ -71,7 +71,7 @@ def bfs(queue, grid, number_of_moves):
             if future_gain > 0:  # Skip moves that add no new scans
                 scored_moves.append((move_key, future_gain))
 
-        # Prioritize high-gain scan moves
+        # prioritize high-gain scan moves
         scored_moves.sort(key=lambda item: -item[1])
         for (nx, ny, ndir), _ in scored_moves:
             queue.append((
