@@ -84,6 +84,9 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
             else if (algorithm === "DFS") {
                 response = await fetch("http://127.0.0.1:5000/api/depth");
             }
+            else if (algorithm === "astar") {
+                response = await fetch("http://127.0.0.1:5000/api/astar");
+            }
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
             const data = await response.json();

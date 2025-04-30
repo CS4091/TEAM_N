@@ -38,6 +38,17 @@ const Controls = ({ algorithm, setAlgorithm, mode, setMode, running, setRunning 
                         />
                         BFS (Breadth First Search)
                     </label>
+                    <br />
+                    <label>
+                        <input
+                            type="radio"
+                            name="algorithm"
+                            value="A*"
+                            checked={algorithm === "astar"}
+                            onChange={() => setAlgorithm("astar")}
+                        />
+                        A* (A* Search)
+                    </label>
                 </div>
 
                 <div className="mode-selection" style={{ marginBottom: "10px", textAlign: "center" }}>
