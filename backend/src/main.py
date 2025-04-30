@@ -3,6 +3,7 @@ from flask import Flask, jsonify, send_from_directory, request
 from grid_generation.grid_world_search_generator import generate_map
 from algorithms.breadth_first_search import run_breadth_algorithm
 from algorithms.depth_first_search import run_depth_algorithm
+from algorithms.aStar_search import run_astar_algorithm
 from flask_cors import CORS
 from datetime import datetime
 import json
@@ -71,6 +72,19 @@ def breadth():
 @app.route('/api/depth', methods=['GET'])
 def depth():
     path, time_taken, coverage, path_len, num_moves = run_depth_algorithm(grid, start_position, number_of_moves)
+    print(path)
+    return jsonify({
+        "path": path,
+        "time": time_taken,
+        "coverage": coverage,
+        "path_len": path_len,
+        "number_of_moves": num_moves,
+        "status": "done"
+    })
+
+@app.route('/api/astar', methods=['GET'])
+def astar():
+    path, time_taken, coverage, path_len, num_moves = run_astar_algorithm(grid, start_position, number_of_moves)
     print(path)
     return jsonify({
         "path": path,
