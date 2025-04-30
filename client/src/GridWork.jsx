@@ -5,6 +5,7 @@ import { faPlane } from "@fortawesome/free-solid-svg-icons";
 const GridWork = ({ algorithm, mode, running, setRunning }) => {
     const [grid, setGrid] = useState([]);
     const [planePosition, setPlanePosition] = useState(null);
+    const [startPosition, setStartPosition] = useState(null);
     const [loading, setLoading] = useState(true);
     const [moves, setMoves] = useState([]);
     const [moveIndex, setMoveIndex] = useState(0);
@@ -22,11 +23,13 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
                 if (data.grid && Array.isArray(data.grid)) {
                     setGrid(data.grid);
                     if (data.start_position && Array.isArray(data.start_position) && data.start_position.length === 2) {
-                        setPlanePosition({
+                        const initial = {
                             row: data.start_position[0],
                             col: data.start_position[1],
                             direction: "E"
-                        });
+                        };
+                        setPlanePosition(initial);
+                        setStartPosition(initial);
                     }
                 }
                 setLoading(false);
@@ -50,9 +53,7 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
             }
             if (index < moves.length) {
                 const move = moves[index];
-                console.log("Current Move:", move);
                 if (move.row !== undefined && move.col !== undefined && move.direction) {
-                    console.log("Setting plane direction to:", move.direction);
                     setPlanePosition({
                         row: move.row,
                         col: move.col,
@@ -75,8 +76,14 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
     const fetchMovesAndStart = async () => {
         if (mode !== "Automatic") return;
 
+        setVisitedCells([]);
+        setScanArea([]);
+        setMoves([]);
+        setMoveIndex(0);
+        setShowOutputButton(false);
+        if (startPosition) setPlanePosition(startPosition);
+
         try {
-            console.log(algorithm);
             let response = "";
             if (algorithm === "BFS") {
                 response = await fetch("http://127.0.0.1:5000/api/breadth");
@@ -102,7 +109,6 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
                 setMoves(extractedMoves);
                 setMoveIndex(0);
                 setRunning(true);
-                setShowOutputButton(false);
             } else {
                 console.error("Invalid move data format.");
             }
@@ -114,6 +120,15 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
     useEffect(() => {
         if (running) fetchMovesAndStart();
     }, [running]);
+
+    useEffect(() => {
+        setVisitedCells([]);
+        setScanArea([]);
+        setMoves([]);
+        setMoveIndex(0);
+        setShowOutputButton(false);
+        if (startPosition) setPlanePosition(startPosition);
+    }, [algorithm]);
 
     const getScanCells = (x, y, direction) => {
         const scan = [];
@@ -161,7 +176,7 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     ...algorithmResult,
-                    algorithm // include from props
+                    algorithm
                 })
             });
 
@@ -210,7 +225,7 @@ const GridWork = ({ algorithm, mode, running, setRunning }) => {
                                                                 : isScan
                                                                 ? "yellow"
                                                                 : isVisited
-                                                                ? "#cce5ff"
+                                                                ? "#63c5da"
                                                                 : "#fff",
                                                     }}
                                                 >
