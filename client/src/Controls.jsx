@@ -17,10 +17,10 @@ const Controls = ({
     return (
         <div style={{
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            flexDirection: "row",
             justifyContent: "center",
-            gap: "15px",
+            alignItems: "flex-start",
+            gap: "40px",
             width: "100%",
             marginTop: "20px"
         }}>
@@ -103,27 +103,44 @@ const Controls = ({
                         >
                             <FontAwesomeIcon icon={faPlay} style={{ marginRight: "5px" }} /> Play
                         </button>
+
+                        <button
+                            onClick={() => setRunning(false)}
+                            style={{
+                                padding: "10px 20px",
+                                fontSize: "14px",
+                                fontWeight: "bold",
+                                backgroundColor: "#f44336",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "5px",
+                                cursor: "pointer",
+                                transition: "background-color 0.3s ease"
+                            }}
+                        >
+                            Stop
+                        </button>
                     </div>
                 )}
-
-                {mode === "Manual" && (
-                    <>
-                        <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-                            <button onClick={() => setMoveIndex(0)}>Restart</button>
-                            <button onClick={() => setMoveIndex(prev => Math.max(prev - 1, 0))}>Back</button>
-                            <button onClick={() => setMoveIndex(prev => Math.min(prev + 1, movesLength - 1))}>Next</button>
-                        </div>
-
-                        {stepInfo && (
-                            <div style={{ marginTop: "10px", textAlign: "center" }}>
-                                <h4>Current Move:</h4>
-                                <p>Step {stepInfo.index}/{stepInfo.total} — Moved {stepInfo.direction} to ({stepInfo.row}, {stepInfo.col})</p>
-                                <p>Scanned: {stepInfo.scannedCount} cells</p>
-                            </div>
-                        )}
-                    </>
-                )}
             </div>
+
+            {mode === "Manual" && (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: "15px", marginBottom: "10px" }}>
+                        <button style={{ padding: "10px 20px", fontSize: "16px" }} onClick={() => setMoveIndex(0)}>Restart</button>
+                        <button style={{ padding: "10px 20px", fontSize: "16px" }} onClick={() => setMoveIndex(prev => Math.max(prev - 1, 0))}>Back</button>
+                        <button style={{ padding: "10px 20px", fontSize: "16px" }} onClick={() => setMoveIndex(prev => Math.min(prev + 1, movesLength - 1))}>Next</button>
+                    </div>
+
+                    {stepInfo && (
+                        <div style={{ marginTop: "10px", textAlign: "center" }}>
+                            <h4>Current Move:</h4>
+                            <p>Step {stepInfo.index}/{stepInfo.total} — Moved {stepInfo.direction} to ({stepInfo.row}, {stepInfo.col})</p>
+                            <p>Scanned: {stepInfo.scannedCount} cells</p>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

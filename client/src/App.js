@@ -12,18 +12,13 @@ function App() {
 
   return (
     <>
-      <Controls
-        algorithm={algorithm}
-        setAlgorithm={setAlgorithm}
-        mode={mode}
-        setMode={setMode}
-        running={running}
-        setRunning={setRunning}
-        moveIndex={moveIndex}
-        setMoveIndex={setMoveIndex}
-        movesLength={movesLength}
-        stepInfo={stepInfo}
-      />
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <h1 style={{ color: "blue", marginBottom: "5px" }}>Testing Controls</h1>
+        <h2 style={{ marginTop: "0px", marginBottom: "10px", color: "blue" }}>Grid Display</h2>
+      </div>
+
+
+
       <GridWork
         algorithm={algorithm}
         mode={mode}
@@ -34,6 +29,18 @@ function App() {
         setStepInfo={setStepInfo}
         stepInfo={stepInfo}
         setMovesLength={setMovesLength}
+      />
+        <Controls
+        algorithm={algorithm}
+        setAlgorithm={setAlgorithm}
+        mode={mode}
+        setMode={setMode}
+        running={running}
+        setRunning={setRunning}
+        moveIndex={moveIndex}
+        setMoveIndex={setMoveIndex}
+        movesLength={movesLength}
+        stepInfo={stepInfo}
       />
     </>
   );
