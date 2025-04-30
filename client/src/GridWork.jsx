@@ -2,278 +2,239 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlane } from "@fortawesome/free-solid-svg-icons";
 
-const GridWork = ({ algorithm, mode, running, setRunning }) => {
-    const [grid, setGrid] = useState([]);
-    const [planePosition, setPlanePosition] = useState(null);
-    const [startPosition, setStartPosition] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [moves, setMoves] = useState([]);
-    const [moveIndex, setMoveIndex] = useState(0);
-    const [showOutputButton, setShowOutputButton] = useState(false);
-    const [scanArea, setScanArea] = useState([]);
-    const [algorithmResult, setAlgorithmResult] = useState(null);
-    const [visitedCells, setVisitedCells] = useState([]);
+const GridWork = ({
+  algorithm,
+  mode,
+  running,
+  setRunning,
+  moveIndex,
+  setMoveIndex,
+  setStepInfo,
+  stepInfo,
+  setMovesLength
+}) => {
+  const [grid, setGrid] = useState([]);
+  const [planePosition, setPlanePosition] = useState(null);
+  const [startPosition, setStartPosition] = useState(null);
+  const [moves, setMoves] = useState([]);
+  const [scanArea, setScanArea] = useState([]);
+  const [visitedCells, setVisitedCells] = useState([]);
+  const [algorithmResult, setAlgorithmResult] = useState(null);
 
-    useEffect(() => {
-        const fetchGrid = async () => {
-            try {
-                const response = await fetch("http://127.0.0.1:5000/api/get-map");
-                const data = await response.json();
-
-                if (data.grid && Array.isArray(data.grid)) {
-                    setGrid(data.grid);
-                    if (data.start_position && Array.isArray(data.start_position) && data.start_position.length === 2) {
-                        const initial = {
-                            row: data.start_position[0],
-                            col: data.start_position[1],
-                            direction: "E"
-                        };
-                        setPlanePosition(initial);
-                        setStartPosition(initial);
-                    }
-                }
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching grid:", error);
-                setLoading(false);
-            }
+  useEffect(() => {
+    const fetchGrid = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/get-map");
+        const data = await response.json();
+        setGrid(data.grid);
+        const start = {
+          row: data.start_position[0],
+          col: data.start_position[1],
+          direction: "E",
         };
-
-        fetchGrid();
-    }, []);
-
-    useEffect(() => {
-        if (!running || moves.length === 0) return;
-
-        let index = 0;
-        const interval = setInterval(() => {
-            if (!running) {
-                clearInterval(interval);
-                return;
-            }
-            if (index < moves.length) {
-                const move = moves[index];
-                if (move.row !== undefined && move.col !== undefined && move.direction) {
-                    setPlanePosition({
-                        row: move.row,
-                        col: move.col,
-                        direction: move.direction
-                    });
-                    setScanArea(getScanCells(move.row, move.col, move.direction));
-                    setVisitedCells(prev => [...prev, `${move.row}-${move.col}`]);
-                }
-                index++;
-            } else {
-                clearInterval(interval);
-                setRunning(false);
-                setShowOutputButton(true);
-            }
-        }, 100);
-
-        return () => clearInterval(interval);
-    }, [running, moves]);
-
-    const fetchMovesAndStart = async () => {
-        if (mode !== "Automatic") return;
-
-        setVisitedCells([]);
-        setScanArea([]);
-        setMoves([]);
-        setMoveIndex(0);
-        setShowOutputButton(false);
-        if (startPosition) setPlanePosition(startPosition);
-
-        try {
-            let response = "";
-            if (algorithm === "BFS") {
-                response = await fetch("http://127.0.0.1:5000/api/breadth");
-            }
-            else if (algorithm === "DFS") {
-                response = await fetch("http://127.0.0.1:5000/api/depth");
-            }
-            else if (algorithm === "astar") {
-                response = await fetch("http://127.0.0.1:5000/api/astar");
-            }
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-            const data = await response.json();
-            setAlgorithmResult(data);
-            const path = Array.isArray(data[0]) ? data[0] : data.path;
-
-            if (Array.isArray(path)) {
-                const extractedMoves = path
-                    .filter(move => move.length >= 3)
-                    .map(move => ({
-                        row: move[0],
-                        col: move[1],
-                        direction: move[2] || "E"
-                    }));
-
-                setMoves(extractedMoves);
-                setMoveIndex(0);
-                setRunning(true);
-            } else {
-                console.error("Invalid move data format.");
-            }
-        } catch (error) {
-            console.error("Error fetching moves:", error);
-        }
+        setPlanePosition(start);
+        setStartPosition(start);
+      } catch (err) {
+        console.error("Grid fetch failed:", err);
+      }
     };
+    fetchGrid();
+  }, []);
 
-    useEffect(() => {
-        if (running) fetchMovesAndStart();
-    }, [running]);
-
-    useEffect(() => {
-        setVisitedCells([]);
-        setScanArea([]);
-        setMoves([]);
-        setMoveIndex(0);
-        setShowOutputButton(false);
-        if (startPosition) setPlanePosition(startPosition);
-    }, [algorithm]);
-
-    const getScanCells = (x, y, direction) => {
-        const scan = [];
-        const offsets = {
-            N: [[-1, -1], [-1, 0], [-1, 1], [-2, -1], [-2, 0], [-2, 1]],
-            S: [[1, -1], [1, 0], [1, 1], [2, -1], [2, 0], [2, 1]],
-            E: [[-1, 1], [0, 1], [1, 1], [-1, 2], [0, 2], [1, 2]],
-            W: [[-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2]],
-        };
-
-        for (const [dx, dy] of offsets[direction]) {
-            const newX = x + dx;
-            const newY = y + dy;
-            if (
-                newX >= 0 && newY >= 0 &&
-                newX < grid.length &&
-                newY < grid[0].length &&
-                grid[newX][newY] === 0
-            ) {
-                scan.push(`${newX}-${newY}`);
-            }
-        }
-        return scan;
-    };
-
-    const getRotationAngle = (direction) => {
-        switch (direction) {
-            case "N": return "270deg";
-            case "E": return "0deg";
-            case "S": return "90deg";
-            case "W": return "180deg";
-            default: return "0deg";
-        }
-    };
-
-    const handleOutputClick = async () => {
-        if (!algorithmResult) {
-            alert("No algorithm output to save!");
-            return;
-        }
-
-        try {
-            const response = await fetch('/api/save-path', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    ...algorithmResult,
-                    algorithm
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.status === "success") {
-                alert(`Output saved successfully to:\n${data.filename}`);
-            } else {
-                alert("Failed to save output.");
-            }
-        } catch (error) {
-            console.error("Error saving file:", error);
-            alert("An error occurred while saving the file.");
-        }
+  useEffect(() => {
+    if (mode === "Manual" || mode === "Automatic") {
+      fetchMovesAndStart();
     }
+  }, [mode, algorithm]);
 
-    return (
-        <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
-            <div style={{ border: "2px solid #ccc", padding: "10px" }}>
-                {loading ? (
-                    <p>Loading grid...</p>
-                ) : grid.length > 0 ? (
-                    <>
-                        <table
-                            cellPadding="0"
-                            style={{
-                                marginBottom: "10px",
-                                borderCollapse: "collapse"
-                            }}
+  useEffect(() => {
+    if (!running || mode !== "Automatic") return;
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i >= moves.length) {
+        clearInterval(interval);
+        setRunning(false);
+        return;
+      }
+      const move = moves[i];
+      setPlanePosition(move);
+      setScanArea(getScanCells(move.row, move.col, move.direction));
+      setVisitedCells(prev => [...new Set([...prev, `${move.row}-${move.col}`])]);
+      i++;
+    }, 120);
+    return () => clearInterval(interval);
+  }, [running, moves, mode]);
+
+  useEffect(() => {
+    if (mode !== "Manual" || moves.length === 0) return;
+    const move = moves[moveIndex];
+    setPlanePosition(move);
+    const newScan = getScanCells(move.row, move.col, move.direction);
+    setScanArea(newScan);
+    setVisitedCells(prev => [...new Set([...prev, `${move.row}-${move.col}`])]);
+    setStepInfo({
+      index: moveIndex + 1,
+      total: moves.length,
+      row: move.row,
+      col: move.col,
+      direction: move.direction,
+      scannedCount: newScan.length,
+    });
+  }, [moveIndex, moves, mode]);
+
+  const fetchMovesAndStart = async () => {
+    try {
+      setVisitedCells([]);
+      setScanArea([]);
+      setMoves([]);
+      setMoveIndex(0);
+      setStepInfo(null);
+      setPlanePosition(startPosition);
+
+      let endpoint = "";
+      if (algorithm === "BFS") endpoint = "breadth";
+      else if (algorithm === "DFS") endpoint = "depth";
+      else if (algorithm === "astar") endpoint = "astar";
+
+      const res = await fetch(`http://127.0.0.1:5000/api/${endpoint}`);
+      const data = await res.json();
+      const path = Array.isArray(data[0]) ? data[0] : data.path;
+      const formatted = path.map(([r, c, d]) => ({ row: r, col: c, direction: d || "E" }));
+      setMoves(formatted);
+      setMovesLength(formatted.length);
+      setAlgorithmResult(data);
+
+      if (mode === "Automatic") setRunning(true);
+    } catch (err) {
+      console.error("Error fetching path:", err);
+    }
+  };
+
+  const handleOutputClick = async () => {
+    if (!algorithmResult) return alert("No algorithm output to save!");
+    try {
+      const response = await fetch("/api/save-path", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...algorithmResult, algorithm }),
+      });
+      const data = await response.json();
+      if (data.status === "success") {
+        alert(`Output saved successfully to:\n${data.filename}`);
+      } else {
+        alert("Failed to save output.");
+      }
+    } catch (err) {
+      console.error("Output save error:", err);
+      alert("An error occurred while saving the file.");
+    }
+  };
+
+  const getScanCells = (x, y, direction) => {
+    const offsets = {
+      N: [[-1, -1], [-1, 0], [-1, 1], [-2, -1], [-2, 0], [-2, 1]],
+      S: [[1, -1], [1, 0], [1, 1], [2, -1], [2, 0], [2, 1]],
+      E: [[-1, 1], [0, 1], [1, 1], [-1, 2], [0, 2], [1, 2]],
+      W: [[-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2]],
+    };
+    return offsets[direction]
+      .map(([dx, dy]) => [x + dx, y + dy])
+      .filter(([nx, ny]) =>
+        nx >= 0 &&
+        ny >= 0 &&
+        nx < grid.length &&
+        ny < grid[0].length &&
+        grid[nx][ny] === 0
+      )
+      .map(([nx, ny]) => `${nx}-${ny}`);
+  };
+
+  const getRotationAngle = (direction) => {
+    switch (direction) {
+      case "N": return "270deg";
+      case "S": return "90deg";
+      case "W": return "180deg";
+      default: return "0deg";
+    }
+  };
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
+      <div style={{ border: "2px solid #ccc", padding: "10px" }}>
+        {grid.length === 0 ? (
+          <p>Loading grid...</p>
+        ) : (
+          <>
+            <table style={{ borderCollapse: "collapse" }}>
+              <tbody>
+                {grid.map((row, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {row.map((cell, colIndex) => {
+                      const isScan = scanArea.includes(`${rowIndex}-${colIndex}`);
+                      const isVisited = visitedCells.includes(`${rowIndex}-${colIndex}`);
+                      return (
+                        <td
+                          key={`${rowIndex}-${colIndex}`}
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            backgroundColor:
+                              cell === 1
+                                ? "#000"
+                                : isScan
+                                ? "yellow"
+                                : isVisited
+                                ? "#63c5da"
+                                : "#fff",
+                          }}
                         >
-                            <tbody>
-                                {grid.map((row, rowIndex) => (
-                                    <tr key={rowIndex}>
-                                        {row.map((cell, colIndex) => {
-                                            const isScan = scanArea.includes(`${rowIndex}-${colIndex}`);
-                                            const isVisited = visitedCells.includes(`${rowIndex}-${colIndex}`);
-                                            return (
-                                                <td
-                                                    key={`${rowIndex}-${colIndex}`}
-                                                    style={{
-                                                        width: "12px",
-                                                        height: "12px",
-                                                        backgroundColor:
-                                                            cell === 1
-                                                                ? "#000"
-                                                                : isScan
-                                                                ? "yellow"
-                                                                : isVisited
-                                                                ? "#63c5da"
-                                                                : "#fff",
-                                                    }}
-                                                >
-                                                    {planePosition &&
-                                                        planePosition.row === rowIndex &&
-                                                        planePosition.col === colIndex && (
-                                                            <div
-                                                                key={planePosition.direction}
-                                                                style={{
-                                                                    display: "flex",
-                                                                    justifyContent: "center",
-                                                                    alignItems: "center",
-                                                                    width: "100%",
-                                                                    height: "100%",
-                                                                    transform: `rotate(${getRotationAngle(planePosition.direction)})`,
-                                                                    transition: "transform 0.3s ease"
-                                                                }}
-                                                            >
-                                                                <FontAwesomeIcon icon={faPlane} size="xs" color="blue" />
-                                                            </div>
-                                                        )}
-                                                </td>
-                                            );
-                                        })}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        {showOutputButton && (
-                        <div style={{ textAlign: "center", marginTop: "10px" }}>
-                            <button
-                                style={{ padding: "10px 20px" }}
-                                onClick={handleOutputClick}
-                            >
-                                Output File
-                            </button>
-                        </div>
-                    )}
-                    </>
-                ) : (
-                    <p>No grid data available.</p>
-                )}
-            </div>
-        </div>
-    );
+                          {planePosition?.row === rowIndex &&
+                            planePosition?.col === colIndex && (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  width: "100%",
+                                  height: "100%",
+                                  transform: `rotate(${getRotationAngle(planePosition.direction)})`,
+                                  transition: "transform 0.3s ease",
+                                }}
+                              >
+                                <FontAwesomeIcon icon={faPlane} size="xs" color="blue" />
+                              </div>
+                            )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {mode === "Automatic" && !running && algorithmResult && (
+              <div style={{ textAlign: "center", marginTop: "10px" }}>
+                <button
+                  onClick={handleOutputClick}
+                  style={{
+                    padding: "10px 20px",
+                    fontSize: "14px",
+                    backgroundColor: "#1976d2",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Output File
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default GridWork;
