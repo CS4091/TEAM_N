@@ -16,45 +16,45 @@ const Controls = ({ algorithm, setAlgorithm, mode, setMode, running, setRunning 
                 flexDirection: "column",
                 alignItems: "center",
             }}>
-                <div className="selection" style={{ marginBottom: "8px", textAlign: "center" }}>
-                    <label>
-                        <input
-                            type="radio"
-                            name="algorithm"
-                            value="DFS"
-                            checked={algorithm === "DFS"}
-                            onChange={() => setAlgorithm("DFS")}
-                        />
-                        DFS (Depth First Search)
-                    </label>
-                    <br />
-                    <label>
-                        <input
-                            type="radio"
-                            name="algorithm"
-                            value="BFS"
-                            checked={algorithm === "BFS"}
-                            onChange={() => setAlgorithm("BFS")}
-                        />
-                        BFS (Breadth First Search)
-                    </label>
-                </div>
+                {/*<div className="selection" style={{ marginBottom: "8px", textAlign: "center" }}>*/}
+                {/*    <label>*/}
+                {/*        <input*/}
+                {/*            type="radio"*/}
+                {/*            name="algorithm"*/}
+                {/*            value="DFS"*/}
+                {/*            checked={algorithm === "DFS"}*/}
+                {/*            onChange={() => setAlgorithm("DFS")}*/}
+                {/*        />*/}
+                {/*        /!*DFS (Depth First Search)*!/*/}
+                {/*    </label>*/}
+                {/*    <br />*/}
+                {/*    <label>*/}
+                {/*        <input*/}
+                {/*            type="radio"*/}
+                {/*            name="algorithm"*/}
+                {/*            value="BFS"*/}
+                {/*            checked={algorithm === "BFS"}*/}
+                {/*            onChange={() => setAlgorithm("BFS")}*/}
+                {/*        />*/}
+                {/*        /!*BFS (Breadth First Search)*!/*/}
+                {/*    </label>*/}
+                {/*</div>*/}
 
                 <div className="mode-selection" style={{ marginBottom: "10px", textAlign: "center" }}>
-                    <button
-                        onClick={() => setMode("Manual")}
-                        className={mode === "Manual" ? "selected" : ""}
-                        style={{ marginRight: "5px", padding: "8px 16px", fontSize: "14px" }}
-                    >
-                        Manual
-                    </button>
-                    <button
-                        onClick={() => setMode("Automatic")}
-                        className={mode === "Automatic" ? "selected" : ""}
-                        style={{ padding: "8px 16px", fontSize: "14px" }}
-                    >
-                        Automatic
-                    </button>
+                    {/*<button*/}
+                    {/*    onClick={() => setMode("Manual")}*/}
+                    {/*    className={mode === "Manual" ? "selected" : ""}*/}
+                    {/*    style={{ marginRight: "5px", padding: "8px 16px", fontSize: "14px" }}*/}
+                    {/*>*/}
+                    {/*    Manual*/}
+                    {/*</button>*/}
+                    {/*<button*/}
+                    {/*    onClick={() => setMode("Automatic")}*/}
+                    {/*    className={mode === "Automatic" ? "selected" : ""}*/}
+                    {/*    style={{ padding: "8px 16px", fontSize: "14px" }}*/}
+                    {/*>*/}
+                    {/*    Automatic*/}
+                    {/*</button>*/}
                 </div>
 
                 {mode === "Automatic" && (
