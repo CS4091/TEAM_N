@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import Controls from "./Controls";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import GridWork from "./GridWork";
-import Header from "./header"; // Ensure this Header component uses a <div className="container"> wrapper
+import Header from "./header";
 
 export const App = () => {
   const [algorithm, setAlgorithm] = useState("DFS");
@@ -24,17 +23,40 @@ export const App = () => {
   );
 };
 
-// DualGameBoyPage view (remains in the same file)
 export default function DualGameBoyPage() {
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [movesLength, setMovesLength] = useState(0);
   const [stepInfo, setStepInfo] = useState(null);
   const [running, setRunning] = useState(false);
+  
+  useEffect(() => {
+    const button = document.getElementById("refresh-map");
+    if (!button) return console.warn("Button #refresh-map not found");
 
-export default App;
+    const handleClick = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/refresh-map");
+        if (!response.ok) throw new Error("Network error");
+        const data = await response.json();
+        console.log("Map refreshed:", data);
+        window.location.reload();
+      } catch (error) {
+        console.error("Refresh failed:", error);
+      }
+    };
+
+    button.addEventListener("click", handleClick);
+
+
+    return () => {
+      button.removeEventListener("click", handleClick);
+    };
+  }, []);
+  
   return (
     <div className="dual-wrapper">
       <Header />
+      <button id="refresh-map" className="gameboy-button">Refresh Map</button>
       <div className="gameboys-wrapper">
         <div className="w-1/2 min-w-[320px]">
           <GridWork

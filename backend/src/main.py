@@ -32,6 +32,12 @@ CORS(app)
 def hello():
     return jsonify(message="Hello from Flask!")
 
+@app.route('/api/refresh-map', methods=['GET'])
+def refresh_map():
+    print('refreshing map')
+    initialize_map()
+    return jsonify("success")
+
 @app.route('/api/get-map', methods=['GET'])
 def get_map():
     """Returns the pre-generated grid and associated data."""
