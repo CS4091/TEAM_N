@@ -1,6 +1,7 @@
 import { FaGithub, FaTwitter, FaEnvelope } from "react-icons/fa"
 import "./main_page.css"
 import React from 'react'
+import placeholder1 from "./placeholder1.png"
 
 function ProjectLandingPage() {
   return (
@@ -38,9 +39,9 @@ function ProjectLandingPage() {
                 </a>
               </div>
             </div>
-            <div className="hero-image">
-              <p>Placeholder</p>
-            </div>
+            {/*<div className="hero-image">*/}
+            {/*  <p>Placeholder</p>*/}
+            {/*</div>*/}
           </div>
         </section>
 
@@ -53,22 +54,50 @@ function ProjectLandingPage() {
             </p>
             <div className="features">
               <div className="feature-image">
-                <p>Placeholder</p>
+                <img src={placeholder1} alt="Feature preview" />
+                <ul className="feature-list">
+                  <li>
+                    <h3>Optimized Pathfinding with Coverage Constraints</h3>
+                    <p>The aircraft navigates the grid using only forward movements and left/right turns, avoiding obstacles while ensuring at least 80% of the terrain is scanned. The algorithm minimizes movement costs and detects dead-end areas (box canyons) to prevent the aircraft from getting stuck.</p>
+                  </li>
+                  <li>
+                    <h3>Efficient Sensor-Based Scanning</h3>
+                    <p>Equipped with a 2x3 scanning sensor, the aircraft strategically positions itself to maximize coverage while reducing redundant passes. The algorithm ensures efficient data collection by optimizing flight paths to scan as many grid cells as possible.</p>
+                  </li>
+                  <li>
+                    <h3>Algorithmic Flexibility and Extendability</h3>
+                    <p>The project supports different pathfinding heuristics, allowing comparison of algorithms like A* and Greedy search. It can be extended with constraints such as limited movement or multiple aircraft working together. A visualization system can also be added to display paths and scanning efficiency.</p>
+                  </li>
+                </ul>
               </div>
-              <ul className="feature-list">
-                <li>
-                  <h3>Optimized Pathfinding with Coverage Constraints</h3>
-                  <p>The aircraft navigates the grid using only forward movements and left/right turns, avoiding obstacles while ensuring at least 80% of the terrain is scanned. The algorithm minimizes movement costs and detects dead-end areas (box canyons) to prevent the aircraft from getting stuck.</p>
-                </li>
-                <li>
-                  <h3>Efficient Sensor-Based Scanning</h3>
-                  <p>Equipped with a 2x3 scanning sensor, the aircraft strategically positions itself to maximize coverage while reducing redundant passes. The algorithm ensures efficient data collection by optimizing flight paths to scan as many grid cells as possible.</p>
-                </li>
-                <li>
-                  <h3>Algorithmic Flexibility and Extendability</h3>
-                  <p>The project supports different pathfinding heuristics, allowing comparison of algorithms like A* and Greedy search. It can be extended with constraints such as limited movement or multiple aircraft working together. A visualization system can also be added to display paths and scanning efficiency.</p>
-                </li>
-              </ul>
+                <section id="algorithms" className="algorithms">
+                <div className="container">
+                  <h2>Algorithms We Use</h2>
+                  <div className="algorithm-cards">
+                    <div className="algorithm-card">
+                      <h3>Breadth-First Search (BFS)</h3>
+                      <p>
+                        Explores the search space level by level to ensure the shortest path is found.
+                        BFS guarantees complete coverage but can be slower due to broad exploration.
+                      </p>
+                    </div>
+                    <div className="algorithm-card">
+                      <h3>Depth-First Search (DFS)</h3>
+                      <p>
+                        Explores as deep as possible along each path before backtracking. DFS is faster
+                        in some scenarios but can miss optimal coverage if not managed carefully.
+                      </p>
+                    </div>
+                    <div className="algorithm-card">
+                      <h3>A* Search</h3>
+                      <p>
+                        Uses heuristics to prioritize nodes closer to the goal, combining the strengths
+                        of BFS and Greedy search. A* provides more efficient coverage with better performance.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
         </section>

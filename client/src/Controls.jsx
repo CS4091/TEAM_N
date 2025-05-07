@@ -24,57 +24,51 @@ const Controls = ({
             width: "100%",
             marginTop: "20px"
         }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <div className="selection" style={{ marginBottom: "8px", textAlign: "center" }}>
-                    <label>
-                        <input
-                            type="radio"
-                            name="algorithm"
-                            value="DFS"
-                            checked={algorithm === "DFS"}
-                            onChange={() => setAlgorithm("DFS")}
-                        />
-                        DFS (Depth First Search)
-                    </label>
-                    <br />
-                    <label>
-                        <input
-                            type="radio"
-                            name="algorithm"
-                            value="BFS"
-                            checked={algorithm === "BFS"}
-                            onChange={() => setAlgorithm("BFS")}
-                        />
-                        BFS (Breadth First Search)
-                    </label>
-                    <br />
-                    <label>
-                        <input
-                            type="radio"
-                            name="algorithm"
-                            value="A*"
-                            checked={algorithm === "astar"}
-                            onChange={() => setAlgorithm("astar")}
-                        />
-                        A* (A* Search)
-                    </label>
-                </div>
+
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+            }}>
+                {/*<div className="selection" style={{ marginBottom: "8px", textAlign: "center" }}>*/}
+                {/*    <label>*/}
+                {/*        <input*/}
+                {/*            type="radio"*/}
+                {/*            name="algorithm"*/}
+                {/*            value="DFS"*/}
+                {/*            checked={algorithm === "DFS"}*/}
+                {/*            onChange={() => setAlgorithm("DFS")}*/}
+                {/*        />*/}
+                {/*        /!*DFS (Depth First Search)*!/*/}
+                {/*    </label>*/}
+                {/*    <br />*/}
+                {/*    <label>*/}
+                {/*        <input*/}
+                {/*            type="radio"*/}
+                {/*            name="algorithm"*/}
+                {/*            value="BFS"*/}
+                {/*            checked={algorithm === "BFS"}*/}
+                {/*            onChange={() => setAlgorithm("BFS")}*/}
+                {/*        />*/}
+                {/*        /!*BFS (Breadth First Search)*!/*/}
+                {/*    </label>*/}
+                {/*</div>*/}
 
                 <div className="mode-selection" style={{ marginBottom: "10px", textAlign: "center" }}>
-                    <button
-                        onClick={() => setMode("Manual")}
-                        className={mode === "Manual" ? "selected" : ""}
-                        style={{ marginRight: "5px", padding: "8px 16px", fontSize: "14px" }}
-                    >
-                        Manual
-                    </button>
-                    <button
-                        onClick={() => setMode("Automatic")}
-                        className={mode === "Automatic" ? "selected" : ""}
-                        style={{ padding: "8px 16px", fontSize: "14px" }}
-                    >
-                        Automatic
-                    </button>
+                    {/*<button*/}
+                    {/*    onClick={() => setMode("Manual")}*/}
+                    {/*    className={mode === "Manual" ? "selected" : ""}*/}
+                    {/*    style={{ marginRight: "5px", padding: "8px 16px", fontSize: "14px" }}*/}
+                    {/*>*/}
+                    {/*    Manual*/}
+                    {/*</button>*/}
+                    {/*<button*/}
+                    {/*    onClick={() => setMode("Automatic")}*/}
+                    {/*    className={mode === "Automatic" ? "selected" : ""}*/}
+                    {/*    style={{ padding: "8px 16px", fontSize: "14px" }}*/}
+                    {/*>*/}
+                    {/*    Automatic*/}
+                    {/*</button>*/}
                 </div>
 
                 {mode === "Automatic" && (
