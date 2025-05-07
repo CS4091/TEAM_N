@@ -209,6 +209,15 @@ const GridWork = ({
   const getRotationAngle = (dir) => ({ N: "270deg", E: "0deg", S: "90deg", W: "180deg" })[dir] || "0deg"
 
   const handleDPadPress = (dir) => {
+    if (!planePosition) return
+
+    const oppositeDirection = {
+      N: "S",
+      S: "N",
+      E: "W",
+      W: "E",
+    }
+
     if (mode === "Manual" && moves.length > 0) {
       let newIndex = moveIndex
       switch (dir) {
@@ -230,35 +239,58 @@ const GridWork = ({
       if (newIndex !== moveIndex) {
         setMoveIndex(newIndex)
       }
-    } else if (!planePosition) return
-    else {
+    } else {
       let { row, col, direction } = planePosition
+      let newDirection = direction
+      let newRow = row
+      let newCol = col
+
       switch (dir) {
         case "up":
-          row = Math.max(0, row - 1)
-          direction = "N"
+          newDirection = "N"
+          newRow = Math.max(0, row - 1)
           break
         case "down":
-          row = Math.min(grid.length - 1, row + 1)
-          direction = "S"
+          newDirection = "S"
+          newRow = Math.min(grid.length - 1, row + 1)
           break
         case "left":
-          col = Math.max(0, col - 1)
-          direction = "W"
+          newDirection = "W"
+          newCol = Math.max(0, col - 1)
           break
         case "right":
-          col = Math.min(grid[0].length - 1, col + 1)
-          direction = "E"
+          newDirection = "E"
+          newCol = Math.min(grid[0].length - 1, col + 1)
           break
         default:
           return
       }
-      if (grid[row][col] !== 1) {
-        setPlanePosition({ row, col, direction })
-        setScanArea(getScanCells(row, col, direction))
+
+      // Don't allow U-turn
+      if (newDirection === oppositeDirection[direction]) {
+        console.log("U-turns not allowed")
+        return
+      }
+
+      // Check if the new position is within bounds
+      // Check if the new position is within bounds
+      const isWithinBounds = newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid[0].length
+      const isNotObstacle = isWithinBounds && grid[newRow][newCol] !== 1
+
+      // Only move and rotate if the move is valid
+      if (isNotObstacle && isWithinBounds) {
+        // Prevent U-turn
+        if (newDirection === oppositeDirection[direction]) {
+          console.log("U-turns not allowed")
+          return
+        }
+
+        setPlanePosition({ row: newRow, col: newCol, direction: newDirection })
+        setScanArea(getScanCells(newRow, newCol, newDirection))
       }
     }
   }
+
 
   const handleButtonPress = (btn) => {
     if (btn === "A") {
