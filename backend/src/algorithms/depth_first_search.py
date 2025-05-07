@@ -17,42 +17,58 @@ direction_map = {
 left_turn = {"N": "W", "W": "S", "S": "E", "E": "N"}
 right_turn = {"N": "E", "E": "S", "S": "W", "W": "N"}
 
-def dfs(stack, grid):
+def dfs(stack, grid, number_of_moves):
     """
-    Iterative DFS to explore the grid while maximizing scan coverage.
-    :param stack: list - [(x, y, direction, path)]
-    :param grid: np.array - represents the grid
-    :return: path taken, time taken, coverage, path length
+    Iterative DFS to explore the grid while maximizing scan coverage,
+    within a move limit and targeting at least 80% scan coverage.
     """
     start_time = time.time()
 
     visited = set()
-    scanned = set()
-    path = []
+    best_path = []
+    best_coverage = 0.0
+    best_path_len = 0
+    best_scanned = set()
+
+    total_cells = np.sum(grid == 0)
 
     while stack:
-        x, y, direction, path = stack.pop()
+        x, y, direction, path, scanned = stack.pop()
 
-        if (x, y) in visited:
+        if (x, y, direction) in visited:
             continue
-        visited.add((x, y))
+        visited.add((x, y, direction))
 
-        # Scan 2x3 area
-        scan_area = get_scan_area(x, y, direction, grid)
-        scanned.update(scan_area)
+        # Scan area from current position
+        new_scanned = scanned | get_scan_area(x, y, direction, grid)
+        coverage = (len(new_scanned) / total_cells) * 100.0 if total_cells > 0 else 0.0
+
+        if coverage > best_coverage or (coverage == best_coverage and len(path) < best_path_len):
+            best_coverage = coverage
+            best_path = path
+            best_path_len = len(path)
+            best_scanned = new_scanned
+
+        # Enforce max moves
+        if len(path) >= number_of_moves:
+            continue
+
+        # Early exit if coverage goal met
+        if coverage >= 80.0:
+            break
 
         # Get valid next moves
-        next_moves = get_valid_moves(x, y, direction, grid, visited)
+        next_moves = get_valid_moves(x, y, direction, grid, {p[:2] for p in path})
         for next_x, next_y, next_dir in next_moves:
-            stack.append((next_x, next_y, next_dir, path + [(next_x, next_y, next_dir)]))
+            stack.append((
+                next_x,
+                next_y,
+                next_dir,
+                path + [(next_x, next_y, next_dir)],
+                new_scanned
+            ))
 
-    scanned_cells = len(scanned)
-    total_cells = np.sum(grid == 0)
-    coverage = (scanned_cells / total_cells) * 100.0 if total_cells > 0 else 0.0
-
-    path_len = len(path)
-
-    return path, (time.time() - start_time), coverage, path_len
+    return best_path, (time.time() - start_time), best_coverage, best_path_len
 
 
 def get_scan_area(x, y, direction, grid):
@@ -130,19 +146,18 @@ def is_valid_cell(x, y, grid, visited):
 
 def run_depth_algorithm(grid, start_position, number_of_moves):
     """
-    Wrapper function to initialize and execute the DFS algorithm
-    for a given grid and starting position.
-
-    :param grid: np.array - Grid representing the map
-    :param start_position: tuple - Starting coordinate (row, col)
-    :param number_of_moves: int - Maximum number of moves allowed
-    :return: tuple - (path_taken, time_taken, coverage, path_len, number_of_moves)
+    Wrapper to initialize and execute DFS search with scanning and move limits.
     """
     start_x, start_y = start_position
     start_direction = "E"
 
-    # initialize dfs
-    stack = [(start_x, start_y, start_direction, [(start_x, start_y)])]
+    initial_stack = [(
+        start_x,
+        start_y,
+        start_direction,
+        [(start_x, start_y, start_direction)],
+        set()
+    )]
 
-    path_taken, time_taken, coverage, path_len = dfs(stack, grid)
+    path_taken, time_taken, coverage, path_len = dfs(initial_stack, grid, number_of_moves)
     return path_taken, time_taken, coverage, path_len, number_of_moves

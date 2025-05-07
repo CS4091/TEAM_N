@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import Controls from "./Controls";
 import "./App.css";
 import GridWork from "./GridWork";
 import Header from "./header"; // Ensure this Header component uses a <div className="container"> wrapper
 
-// Standard App view
 export const App = () => {
   const [algorithm, setAlgorithm] = useState("DFS");
   const [mode, setMode] = useState("Manual");
@@ -31,6 +31,7 @@ export default function DualGameBoyPage() {
   const [stepInfo, setStepInfo] = useState(null);
   const [running, setRunning] = useState(false);
 
+export default App;
   return (
     <div className="dual-wrapper">
       <Header />

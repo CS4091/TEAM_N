@@ -14,76 +14,95 @@ direction_map = {
     "W": (0, -1),
 }
 
-# Left and right turn mappings
+# Turn mappings
 left_turn = {"N": "W", "W": "S", "S": "E", "E": "N"}
 right_turn = {"N": "E", "E": "S", "S": "W", "W": "N"}
 
-def bfs(queue, grid):
-    """
-    Iterative BFS to explore the grid while maximizing scan coverage.
-
-    :param queue: deque - (x, y, direction, path)
-    :param grid: np.array - represents the grid
-    :return: Full path taken and time taken
-    """
-
+def bfs(queue, grid, number_of_moves):
     start_time = time.time()
 
-    visited = set()
-    scanned = set()
-    path = []
+    visited = dict()  # tracks best scan count for each (x, y, direction)
+    best_path = []
+    best_coverage = 0.0
+    best_path_len = 0
+
+    total_cells = np.sum(grid == 0)
+    scan_cache = {}
 
     while queue:
-        x, y, direction, path = queue.popleft()
+        x, y, direction, path, scanned = queue.popleft()
 
-        # Mark as visited
-        if (x, y) in visited:
+        # Cache scan area if not already done
+        key = (x, y, direction)
+        if key not in scan_cache:
+            scan_cache[key] = get_scan_area(x, y, direction, grid)
+
+        # Merge scanned area
+        new_scanned = scanned | scan_cache[key]
+        scan_count = len(new_scanned)
+        coverage = (scan_count / total_cells) * 100.0 if total_cells > 0 else 0.0
+
+        # Skip if this state has already been visited with equal or better scanned count
+        if key in visited and scan_count <= visited[key]:
             continue
-        visited.add((x, y))
+        visited[key] = scan_count
 
-        # Scan a 2x3 area in front of the aircraft
-        scan_area = get_scan_area(x, y, direction, grid)
-        scanned.update(scan_area)
+        # track best result
+        if coverage > best_coverage or (coverage == best_coverage and len(path) < best_path_len):
+            best_coverage = coverage
+            best_path = path
+            best_path_len = len(path)
 
-        # Get next valid moves (forward, left, right)
-        next_moves = get_valid_moves(x, y, direction, grid, visited)
-        for next_x, next_y, next_dir in next_moves:
-                queue.append((next_x, next_y, next_dir, path + [(next_x, next_y, next_dir)]))
+        # end conditions
+        if len(path) >= number_of_moves:
+            continue
+        if coverage >= 80.0:
+            break
 
-    ''' Calculate Metrics '''
-    # get percentage of grid covered
-    scanned_cells = len(scanned)
-    total_cells = np.sum(grid == 0)
-    coverage = (scanned_cells / total_cells) * 100.0 if total_cells > 0 else 0.0
+        # get next moves
+        next_moves = get_valid_moves(x, y, direction, grid, {p[:2] for p in path})
+        scored_moves = []
 
-    path_len = len(path)
+        for nx, ny, ndir in next_moves:
+            move_key = (nx, ny, ndir)
+            if move_key not in scan_cache:
+                scan_cache[move_key] = get_scan_area(nx, ny, ndir, grid)
+            future_gain = len(scan_cache[move_key] - new_scanned)
+            if future_gain > 0:  # Skip moves that add no new scans
+                scored_moves.append((move_key, future_gain))
 
-    return path, (time.time() - start_time), coverage, path_len
+        # prioritize high-gain scan moves
+        scored_moves.sort(key=lambda item: -item[1])
+        for (nx, ny, ndir), _ in scored_moves:
+            queue.append((
+                nx,
+                ny,
+                ndir,
+                path + [(nx, ny, ndir)],
+                new_scanned
+            ))
 
+    return best_path, (time.time() - start_time), best_coverage, best_path_len
 
 def get_scan_area(x, y, direction, grid):
-    """ Scans a 2x3 area in front of the aircraft """
-
+    """ Returns set of (x, y) positions scanned from aircraft position/direction """
     scanned_cells = set()
     dx, dy = direction_map[direction]
 
-    for i in range(1, 3):
-        for j in [-1, 0, 1]:
-            scanned_x, scanned_y = x + dx * i, y + dy * i + j
-            if 0 <= scanned_x < grid.shape[0] and 0 <= scanned_y < grid.shape[1]:
-                if grid[scanned_x][scanned_y] == 0:
-                    scanned_cells.add((scanned_x, scanned_y))
-
+    for i in range(1, 3):  # Rows ahead
+        for j in [-1, 0, 1]:  # 3 columns wide
+            sx, sy = x + dx * i, y + dy * i + j
+            if 0 <= sx < grid.shape[0] and 0 <= sy < grid.shape[1]:
+                if grid[sx][sy] == 0:
+                    scanned_cells.add((sx, sy))
     return scanned_cells
 
-
 def get_valid_moves(x, y, direction, grid, visited):
-    """ Returns valid moves: forward, left, right (NO BACKWARDS movement) """
-
+    """ Returns valid (x, y, direction) positions the aircraft can move to """
     valid_moves = []
     dx, dy = direction_map[direction]
 
-    # Move forward
+    # Forward
     fx, fy = x + dx, y + dy
     if is_valid_cell(fx, fy, grid, visited):
         valid_moves.append((fx, fy, direction))
@@ -91,37 +110,32 @@ def get_valid_moves(x, y, direction, grid, visited):
     # Left turn
     left_dir = left_turn[direction]
     lx, ly = x + direction_map[left_dir][0], y + direction_map[left_dir][1]
-    if 0 <= lx < grid.shape[0] and 0 <= ly < grid.shape[1]:
-        if is_valid_cell(lx, ly, grid, visited):
-            valid_moves.append((lx, ly, left_dir))
+    if is_valid_cell(lx, ly, grid, visited):
+        valid_moves.append((lx, ly, left_dir))
 
     # Right turn
     right_dir = right_turn[direction]
     rx, ry = x + direction_map[right_dir][0], y + direction_map[right_dir][1]
-    if 0 <= rx < grid.shape[0] and 0 <= ry < grid.shape[1]:
-        if is_valid_cell(rx, ry, grid, visited):
-            valid_moves.append((rx, ry, right_dir))
+    if is_valid_cell(rx, ry, grid, visited):
+        valid_moves.append((rx, ry, right_dir))
 
     return valid_moves
 
-
 def is_valid_cell(x, y, grid, visited):
-    """ Checks if a cell is within bounds, not an obstacle, and not visited """
-    return ((0 <= x < grid.shape[0]) and (0 <= y < grid.shape[1]) and
-            (grid[x][y] == 0) and (x, y) not in visited)
+    """ Returns True if cell is traversable and not already visited """
+    return (0 <= x < grid.shape[0]) and (0 <= y < grid.shape[1]) and \
+           grid[x][y] == 0 and (x, y) not in visited
 
-
-''' Main Start '''
 def run_breadth_algorithm(grid, start_position, number_of_moves):
-    # Load grid and starting positions
-    grid = grid
+    """
+    Initializes and runs the optimized BFS algorithm.
+    """
     start_x, start_y = start_position
     start_direction = "E"
 
-    # initialize bfs
-    queue = deque([(start_x, start_y, start_direction, [(start_x, start_y)])])
+    queue = deque([
+        (start_x, start_y, start_direction, [(start_x, start_y, start_direction)], set())
+    ])
 
-    # run bfs until all reachable cells are visited
-    path_taken, time_taken, coverage, path_len = bfs(queue, grid)
-
+    path_taken, time_taken, coverage, path_len = bfs(queue, grid, number_of_moves)
     return path_taken, time_taken, coverage, path_len, number_of_moves
