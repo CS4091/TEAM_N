@@ -96,10 +96,10 @@ def generate_map():
     #random.seed(42)
 
     scale = 50.0
-    threshold = 0.6  # Threshold for determining if noise value becomes an obstacle
-    octaves = 2
+    threshold = 0.5  # Threshold for determining if noise value becomes an obstacle
+    octaves = 3
     persistence = random.uniform(0.25, 4.5)
-    lacunarity = random.uniform(1, 5)
+    lacunarity = random.uniform(1.5, 2.5)
 
     print(f'Octaves: {octaves}')
     print(f'Persistence: {persistence}')
